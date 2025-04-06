@@ -1,0 +1,5 @@
+Options all -Indexes    <!--Para no engresar en las carpetas privadas desde la url -->
+RewriteEngine on <!-- Para confugurar url amigables -->
+RewriteCond %{REQUEST_FILENAME} !-d  <!--Valida si un directorio es valido-->
+RewriteCond %{REQUEST_FILENAME} !-f  <!--Valida si un archivo es valido-->
+RewriteRule ^(.*)$ index.php?_url=$1 [QSA,L] <!--Almacenar en una variable todo lo que tenga el archivo Index.php-->
