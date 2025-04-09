@@ -23,7 +23,7 @@
 
         public function Permiso($id){
             $data['id_usuario'] = $id;
-            if (empty($_SESSION['SessionOn'])) {
+            if (empty($_SESSION['SessionOn']) ) {
                 header('Location:'.base_url);
             }
 

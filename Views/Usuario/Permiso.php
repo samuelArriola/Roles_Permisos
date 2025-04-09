@@ -21,19 +21,7 @@
             </div>
           </div>
           <form action="" id="CargarPermiso" onsubmit="RegistrarPermisos(event)">
-            <div class="card-body"> <br>
-                <div class="row">
-                  <?php foreach ($data['datos'] as $value) { ?>
-                    <div class="col-md-3 col-ld-2 p-2">
-                      <div class="form-check form-switch form-check-reverse">
-                        <input class="form-check-input" type="checkbox" name="permisos[]" value="<?php echo $value['id'] ?>" <?php echo isset($data['PermisoUsu'][$value['id']]) ? 'checked' : '' ; ?>>
-                        <label class="form-check-label" for=""><?php echo $value['permiso'] ?></label>
-                      </div>
-                    </div>
-                    <?php } ?>
-                    
-                </div>
-            </div>
+           
             <div class="card-body"> <br>
               <div class="row">
                   <div class="accordion " id="accordionExample">
@@ -43,14 +31,14 @@
                         if ($MenuAll['ruta'] === '#') { ?>
                       <div class="accordion-item">
                         <h2 class="accordion-header" id="heading<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>">
-                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>" aria-expanded="false" aria-controls="<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>">
-                            <div class="form-check" >
-                                <input class="form-check-input Modulo" type="checkbox" id="" data-parent=""  >
+                          <button class="accordion-button  <?php echo isset($data['PermisoUsu'][$MenuAll['id']]) ? '' : 'collapsed' ; ?>" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>" aria-expanded="false" aria-controls="<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>">
+                            <div class="form-check" style="display:none" >
+                                <input class="form-check-input modulo" type="checkbox"  id="modulo_<?php echo "{$MenuAll['permiso']}_{$MenuAll['id']}"; ?>"  data-idmodulo="<?php echo $MenuAll['id']; ?>"  >
                             </div>  
                               <?php echo $MenuAll['permiso'] ?>
                           </button>
                         </h2>
-                          <div id="<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>" class="accordion-collapse collapse" aria-labelledby="heading<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>" >
+                          <div id="<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>" class="accordion-collapse collapse <?php echo isset($data['PermisoUsu'][$MenuAll['id']]) ? 'show' : '' ;?>" aria-labelledby="heading<?php echo "{$MenuAll['id']}{$MenuAll['permiso']}"; ?>" >
                             <div class="accordion-body">
                             <table class="table">
                               <thead>
@@ -70,7 +58,7 @@
                                       <!-- <div class="Divsubmenu"> -->
                                         <th scope="row">
                                           <div class="form-check">
-                                              <input class="form-check-input submenu" type="checkbox" id="submenu_<?php echo "{$SubMenuAll['permiso']}_{$SubMenuAll['id']}";?>" data-parent="submenu_<?php echo $SubMenuAll['permiso'];?>"  <?php echo isset($data['PermisoUsu'][$SubMenuAll['id']]) ? 'checked' : '' ; ?>>
+                                              <input class="form-check-input submenu" type="checkbox" data-modulo="modulo_<?php echo "{$MenuAll['permiso']}_{$MenuAll['id']}"; ?>" id="submenu_<?php echo "{$SubMenuAll['permiso']}_{$SubMenuAll['id']}";?>" data-parent="submenu_<?php echo $SubMenuAll['permiso'];?>"  <?php echo isset($data['PermisoUsu'][$SubMenuAll['id']]) ? 'checked' : '' ; ?>>
                                               <label class="form-check-label" for="submenu<?php echo $SubMenuAll['permiso'];?>"><?php echo $SubMenuAll['permiso'];?></label>
                                           </div>
                                         </th>

@@ -40,7 +40,7 @@
             $data = $this->selectAll($sql);
             return $data;
         }
-
+          
         public function RegistrarPermisos(int $IdUser, int $Permiso, int $c, int $r, int $u, int $d){
             $this->IdUser = $IdUser;
             $this->Permiso = $Permiso;
@@ -48,9 +48,8 @@
             $this->r = $r;
             $this->u = $u;
             $this->d = $d;
-
             $sql = "INSERT INTO detalle_permisos (id_usuario, id_permiso, c, r, u, d) VALUES (?,?,?,?,?,?)";
-            $data = $this->save($sql, array($this->IdUser, $this->Permiso, $this->c, $this->r, $this->u, $this->d));
+            $data = $this->save($sql, array($this->IdUser, $this->Permiso, $this->c, $this->r, $this->u, $this->d ) );
             if ($data == 1) {
                 $res = 'Ok';
             } else {

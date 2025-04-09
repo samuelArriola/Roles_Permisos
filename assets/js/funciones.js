@@ -637,22 +637,53 @@ function ActivarProducto(id) {
 //--------------------------------------------------------------  --------------------------------------------------
 
 function RegistrarPermisos(e) {
-    e.preventDefault();
-    console.log('Registrar permiso');
-    
+    e.preventDefault();    
     let permisos = [];
     let id_usuario = $("#id_usuario").val(); // Asegúrate de que este campo existe en tu formulario
+    
 
-    // Recorre cada opción de submenu
+    // Guardo los Modulos
+    $(".modulo").each(function () {
+        let id_modulo = $(this).attr("id");
+        let tienePermiso = false;
+        let id_id_Modulo ;
+        $(`.submenu[data-modulo="${id_modulo}"]`).each(function () {
+            let nombre = $(this).attr("id").split("_")[1];
+             id_id_Modulo =  id_modulo.split("_")[2]; // Usa el ID del permiso
+            if (
+                $(`#${nombre}Crear`).is(":checked") ||
+                $(`#${nombre}Leer`).is(":checked") ||
+                $(`#${nombre}Actualizar`).is(":checked") ||
+                $(`#${nombre}Eliminar`).is(":checked")
+            ) {
+                tienePermiso = true;
+            }
+            
+        });
+    
+        if (tienePermiso) {
+            permisos.push({
+                id_permiso: id_id_Modulo,
+                c: 0,
+                r: 0,
+                u: 0,
+                d: 0
+            });
+        }
+
+    });
+
+    //Recorre cada opción de submenu
     $(".submenu").each(function () {
         let Nombre_permiso = $(this).attr("id").split("_")[1]; // Usa el ID del permiso
         let Id_permiso = $(this).attr("id").split("_")[2]; // Usa el ID del permiso
+      
         let c = $(`#${Nombre_permiso}Crear`).is(":checked") ? 1 : 0;
         let r = $(`#${Nombre_permiso}Leer`).is(":checked") ? 1 : 0;
         let u = $(`#${Nombre_permiso}Actualizar`).is(":checked") ? 1 : 0;
         let d = $(`#${Nombre_permiso}Eliminar`).is(":checked") ? 1 : 0;
 
-        if (c || r || u || d) { // Solo guarda si hay al menos un permiso seleccionado
+        if (c || r || u || d) { // Solo guarda los permisos si  hay al menos un permiso seleccionado
             permisos.push({
                 id_permiso: Id_permiso,
                 c: c,
@@ -662,35 +693,46 @@ function RegistrarPermisos(e) {
             });
         }
     });
-    
-    $.ajax({
-        type: "POST",
-        url: base_url+"Usuario/RegistrarPermiso",
-        data: JSON.stringify({ id_usuario: id_usuario, permisos: permisos }),
-        contentType: "application/json",
-        dataType: "json",
-        success: function(res) {
-           // res = JSON.parse(res);
-            console.log(res);
-            
-            if(res['status'] == 'Ok'){
-                Swal.fire({
-                    title: "Permisos Cargados",
-                    text: "Permisos Cargados Exitosamente",
-                    icon: "success",
-                    timer: 3000
-                });
-                TblProducto.ajax.reload();
-            }else{
-                Swal.fire({
-                    title: "Oops Error!!",
-                    text: "Error al momento cargar los permisos",
-                    icon: "error",
-                    timer: 3000
-                });
+
+
+    if(Array.isArray(permisos) && permisos.length === 0 ){
+        Swal.fire({
+            title: "Permiso vácio",
+            text: "Upss!! Debe seleccionar al menos un permiso.",
+            icon: "warning",
+            timer: 3000
+        });
+    }else{
+        $.ajax({
+            type: "POST",
+            url: base_url+"Usuario/RegistrarPermiso",
+            data: JSON.stringify({ id_usuario: id_usuario, permisos: permisos }),
+            contentType: "application/json",
+            dataType: "json",
+            success: function(res) {
+               // res = JSON.parse(res);
+                console.log(res);
+                
+                if(res['status'] == 'Ok'){
+                    Swal.fire({
+                        title: "Permisos Cargados",
+                        text: "Permisos Cargados Exitosamente",
+                        icon: "success",
+                        timer: 3000
+                    });
+                    TblProducto.ajax.reload();
+                }else{
+                    Swal.fire({
+                        title: "Oops Error!!",
+                        text: "Error al momento cargar los permisos",
+                        icon: "error",
+                        timer: 3000
+                    });
+                }
             }
-        }
-    });  
+        });  
+    }
+    
 }
 
 $(".form-check-input").on("click", function(event) {
