@@ -11,8 +11,7 @@ $(document).ready(function () {
         columns: [
          {"data": 'id'},
          {"data": 'Nombre'},
-         {"data": 'Rol'},
-         {"data": 'GenCaja'},
+         {"data": 'Nombre_rol'},
          {"data": 'Estado'},
          {"data": 'Opciones'},
         ]
@@ -83,7 +82,7 @@ $('#GeRegUser').click(function (e) {
     let GeClave = $('#GeClave');
     let GeConClave = $('#GeConClave');
     let GeSexo = $('#GeSexo');
-    let GeCaja = $('#GeCaja');
+    let GeRol = $('#GeRol');
     let GeEstado = $('#GeEstado');
 
     const datos = {
@@ -100,7 +99,7 @@ $('#GeRegUser').click(function (e) {
         GeClave: GeClave.val(),
         GeConClave: GeConClave.val(),
         GeSexo: GeSexo.val(),
-        GeCaja: GeCaja.val(),
+        GeRol: GeRol.val(),
         GeEstado: GeEstado.val(),
         
     }
@@ -108,7 +107,7 @@ $('#GeRegUser').click(function (e) {
     if (isEmpty( GePriNom.val()) || isEmpty( GePriApe.val()) ||
         isEmpty( GeSegApe.val()) || isEmpty( GeTipDoc.val()) || isEmpty( GeNumDoc.val()) ||
         isEmpty( GeTelefono.val()) || isEmpty( GeCorreo.val()) || isEmpty( GeUsuario.val()) || 
-        isEmpty( GeSexo.val()) || isEmpty( GeCaja.val()) || isEmpty( GeEstado.val())) {
+        isEmpty( GeSexo.val()) || isEmpty( GeRol.val()) || isEmpty( GeEstado.val())) {
         Swal.fire({
             title: "Campos vácios",
             text: "Por favor llene todos los campos",
@@ -204,7 +203,7 @@ function btnEdiUsu(id) {
         $('#DivGeClave').addClass('d-none');
         $('#DivGeConClave').addClass('d-none');
         $('#GeSexo').val(res.Sexo); 
-        $('#GeCaja').val(res.Gencaja);
+        $('#GeRol').val(res.Rol);
         $('#GeEstado').val(res.Rol);
         }
     });
@@ -235,8 +234,6 @@ function DesactivarUsuario( id) {
             }
         }
     });
-        
-
 }
 function ActivarUsuario(id) {
     $.ajax({

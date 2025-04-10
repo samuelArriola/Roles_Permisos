@@ -1,7 +1,7 @@
 <?php 
     class UsuarioModel extends Query {
         private $GePriNom, $GeSegNom, $GePriApe, $GeSegApe, $GeTipDoc, $GeNumDoc, $GeTelefono,
-                 $GeCorreo, $GeUsuario, $hasGenClave, $GeSexo, $GeCaja, $GeEstado, $GeUsuId, $id, $estado, $IdUser, $Permiso , $c,  $r,  $u,  $d;
+                 $GeCorreo, $GeUsuario, $hasGenClave, $GeSexo, $GeRol, $GeEstado, $GeUsuId, $id, $estado, $IdUser, $RolId, $Permiso , $c,  $r,  $u,  $d;
         public function __construct(){
             parent::__construct();
         }
@@ -13,13 +13,16 @@
         }
 
         public function GetUsuarios(){
-            $sql = "SELECT genusuario.id, genusuario.Rol, genusuario.Nombre, genusuario.Usuestado Usuestado , Gencaja.caja GenCaja FROM genusuario INNER JOIN Gencaja ON genusuario.Gencaja = Gencaja.id ";
+            $sql = "SELECT genusuario.id, genusuario.Rol, genusuario.Nombre, genusuario.Usuestado Usuestado , GenRol.Nombre_rol  , GenRol.id_rol
+                    FROM genusuario 
+                        INNER JOIN GenRol ON genusuario.Rol = GenRol.id_rol
+                    ";
             $data = $this->selectAll($sql);
             return $data;
         }
 
-        public function GetCajas(){
-            $sql = "SELECT * FROM Gencaja WHERE Estado = 1";
+        public function GetRol(){
+            $sql = "SELECT * FROM GenRol WHERE Estado = 1";
             $data = $this->selectAll($sql);
             return $data;
         }
@@ -32,11 +35,11 @@
         }
 
         //Obtner todos los permisos que tiene asignado el usuario
-        public function GetPermisoUsuario(int $IdUser){
+        public function GetPermisoUsuario(int $RolId){
             $sql = "SELECT detalle_permisos.* 
                     FROM detalle_permisos 
                         INNER JOIN genpermiso ON detalle_permisos.id_permiso = genpermiso.id
-                    WHERE detalle_permisos.id_usuario = $IdUser ";
+                    WHERE detalle_permisos.id_rol = $RolId ";
             $data = $this->selectAll($sql);
             return $data;
         }
@@ -61,7 +64,7 @@
 
         public function EliminarPermisos(int $IdUser){
             $this->IdUser = $IdUser;
-            $sql = "DELETE FROM detalle_permisos WHERE id_usuario  = ?";
+            $sql = "DELETE FROM detalle_permisos WHERE id_rol  = ?";
             $datos = array( $this->IdUser);
             $data = $this->save($sql,$datos);
             if ($data == 1) {
@@ -73,15 +76,15 @@
             return $res;
         }
 
-        public function verificarPermiso(int $id_user, string $permiso){
-            $sql = "SELECT detalle_permisos.id_permiso, detalle_permisos.id_usuario, genpermiso.permiso 
+        public function verificarPermiso(int $RolId, string $permiso){
+            $sql = "SELECT detalle_permisos.id_permiso, detalle_permisos.id_rol, genpermiso.permiso 
                     FROM `detalle_permisos` 
                         INNER JOIN genpermiso ON detalle_permisos.id_permiso = genpermiso.id
-                    WHERE detalle_permisos.id_usuario = $id_user AND genpermiso.permiso = '$permiso'";
+                    WHERE detalle_permisos.id_rol = $RolId AND genpermiso.permiso = '$permiso'";
             $data = $this->selectAll($sql);
             return $data;
         }
-        public function RegistrarUsuarios( string $GePriNom, string $GeSegNom, string $GePriApe, string $GeSegApe, int $GeTipDoc, string $GeNumDoc, string $GeTelefono, string $GeUsuario, string $hasGenClave, string $GeSexo, int $GeCaja, string $GeCorreo, int $GeEstado, ){
+        public function RegistrarUsuarios( string $GePriNom, string $GeSegNom, string $GePriApe, string $GeSegApe, int $GeTipDoc, string $GeNumDoc, string $GeTelefono, string $GeUsuario, string $hasGenClave, string $GeSexo, int $GeRol, string $GeCorreo, int $GeEstado, ){
             $this->GePriNom = $GePriNom;
             $this->GeSegNom = $GeSegNom;
             $this->GePriApe = $GePriApe;
@@ -92,16 +95,16 @@
             $this->GeUsuario = $GeUsuario;
             $this->hasGenClave = $hasGenClave;
             $this->GeSexo = $GeSexo;
-            $this->GeCaja = $GeCaja;
+            $this->GeRol = $GeRol;
             $this->GeCorreo = $GeCorreo;
             $this->GeEstado = $GeEstado;
 
             $verificar = "SELECT * FROM genusuario WHERE Numdoc = ".$this->GeNumDoc." ";
             $verificardo = $this->select($verificar);
             if(empty($verificardo)){
-                $sql = "INSERT INTO genusuario(Nombre, Nombre2, Apellido, Apellido2, Tipdoc, Numdoc, Sexo, Usuario, Clave, Telefono, Rol, Gencaja, Correo)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                $datos = array($this->GePriNom, $this->GeSegNom, $this->GePriApe, $this->GeSegApe, $this->GeTipDoc, $this->GeNumDoc, $this->GeSexo, $this->GeUsuario, $this->hasGenClave, $this->GeTelefono, $this->GeEstado, $this->GeCaja, $this->GeCorreo);
+                $sql = "INSERT INTO genusuario(Nombre, Nombre2, Apellido, Apellido2, Tipdoc, Numdoc, Sexo, Usuario, Clave, Telefono, Rol,  Correo)
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+                $datos = array($this->GePriNom, $this->GeSegNom, $this->GePriApe, $this->GeSegApe, $this->GeTipDoc, $this->GeNumDoc, $this->GeSexo, $this->GeUsuario, $this->hasGenClave, $this->GeTelefono,  $this->GeRol, $this->GeCorreo);
                 $data = $this->save($sql,$datos);
                 if ( $data == 1) {
                     $res = 'Ok';
@@ -114,7 +117,7 @@
             return $res;
         }
 
-        public function ActulizarUsuarios( string $GePriNom, string $GeSegNom, string $GePriApe, string $GeSegApe, int $GeTipDoc, string $GeNumDoc, string $GeTelefono, string $GeUsuario, string $GeSexo, int $GeCaja, string $GeCorreo, int $GeEstado, int $GeUsuId ){
+        public function ActulizarUsuarios( string $GePriNom, string $GeSegNom, string $GePriApe, string $GeSegApe, int $GeTipDoc, string $GeNumDoc, string $GeTelefono, string $GeUsuario, string $GeSexo, int $GeRol, string $GeCorreo, int $GeEstado, int $GeUsuId ){
             $this->GePriNom = $GePriNom;
             $this->GeSegNom = $GeSegNom;
             $this->GePriApe = $GePriApe;
@@ -124,13 +127,13 @@
             $this->GeTelefono = $GeTelefono;
             $this->GeUsuario = $GeUsuario;
             $this->GeSexo = $GeSexo;
-            $this->GeCaja = $GeCaja;
+            $this->GeRol = $GeRol;
             $this->GeCorreo = $GeCorreo;
             $this->GeEstado = $GeEstado;
             $this->$GeUsuId = $GeUsuId;
 
-            $sql = "UPDATE genusuario SET Nombre=?,Nombre2=?,Apellido=?,Apellido2=?,Tipdoc=?,Numdoc=?,Sexo=?,Usuario=?,Telefono=?,Rol=?,Gencaja=?,Correo=?, Actualizado= now() WHERE id = ?";
-            $datos = array($this->GePriNom, $this->GeSegNom, $this->GePriApe, $this->GeSegApe, $this->GeTipDoc, $this->GeNumDoc, $this->GeSexo, $this->GeUsuario, $this->GeTelefono, $this->GeEstado, $this->GeCaja, $this->GeCorreo, $this->$GeUsuId);
+            $sql = "UPDATE genusuario SET Nombre=?,Nombre2=?,Apellido=?,Apellido2=?,Tipdoc=?,Numdoc=?,Sexo=?,Usuario=?,Telefono=?,Rol=?,Correo=?, Actualizado= now() WHERE id = ?";
+            $datos = array($this->GePriNom, $this->GeSegNom, $this->GePriApe, $this->GeSegApe, $this->GeTipDoc, $this->GeNumDoc, $this->GeSexo, $this->GeUsuario, $this->GeTelefono,$this->GeRol, $this->GeCorreo, $this->$GeUsuId);
             $data = $this->save($sql,$datos);
             if ( $data == 1) {
                 $res = 'Actualizado';
@@ -159,7 +162,7 @@
             $sql = "SELECT genpermiso.id, menu_id, permiso, icono , genpermiso.ruta
                     FROM `detalle_permisos` 
                         INNER JOIN genpermiso ON detalle_permisos.id_permiso = genpermiso.id
-                    WHERE detalle_permisos.id_usuario = $id_user and genpermiso.menu_id is null";
+                    WHERE detalle_permisos.id_rol = $id_user and genpermiso.menu_id is null";
             $data = $this->selectAll($sql);
             return $data;
         }
@@ -176,7 +179,7 @@
             $sql = "SELECT genpermiso.id, menu_id, permiso, icono, genpermiso.ruta
                     FROM `detalle_permisos` 
                         INNER JOIN genpermiso ON detalle_permisos.id_permiso = genpermiso.id
-                    WHERE detalle_permisos.id_usuario = $id_user and genpermiso.menu_id <> 0";
+                    WHERE detalle_permisos.id_rol = $id_user and genpermiso.menu_id <> 0";
             $data = $this->selectAll($sql);
             return $data;
         }

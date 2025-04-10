@@ -12,7 +12,7 @@
 </div><!-- End Page Title -->
 
 <div class="btn-group mb-2" role="group" aria-label="">
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CrearRolModal" id="OpenModCreaRol"><i class="bi bi-person-plus-fill"></i></button>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CrearRolModal" id="OpenModRolCrea"><i class="bi bi-person-plus-fill"></i></button>
 </div>
 
 <table class="table table-striped " id="TblRol">
@@ -34,15 +34,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="CrearRolModalLabel">Crear Rol</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
       </div>
       <div class="modal-body">
         <form id="FrmRegRol">
           <div class="row">
               <input type="hidden"  id="GeRolId"></input>
               <div class="mb-3 col-md-12">
-                <label for="GePriNomRol">Nombre del Rol</label>
-               <input type="text" class="form-control" id="GePriNomRol" aria-describedby="" placeholder="">
+                <label for="GeNomRol">Nombre del Rol</label>
+               <input type="text" class="form-control" id="GeNomRol" aria-describedby="" placeholder="">
               </div>
           </div>
         </form>

@@ -20,8 +20,7 @@
         <tr>
             <th>id</th>
             <th>Nombre</th>
-            <th>Rola</th>
-            <th>Caja</th>
+            <th>Rol</th>
             <th>Activo</th>
             <th>Opciones</th>
         </tr>
@@ -92,11 +91,11 @@
             </div>
             <div class="mb-3 col-md-4">
               <div class="form-group">
-                <label for="GeCaja">Caja</label>
-                <select class="form-control" name="" id="GeCaja">
+                <label for="GeRol">Rol</label>
+                <select class="form-control" name="" id="GeRol">
                   <option value="">Seleccione una opción</option>
                   <?php for ($i=0; $i < count($data) ; $i++) {  ?>
-                       <option value="<?php echo $data[$i]['id']; ?>"> <?php echo $data[$i]['Caja']; ?> </option>
+                       <option value="<?php echo $data[$i]['id_rol']; ?>"> <?php echo $data[$i]['Nombre_rol']; ?></option>
                   <?php   }?>
                  
                 </select>

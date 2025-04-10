@@ -11,9 +11,10 @@
             }
 
             $id_user = $_SESSION['id'];
-            $verificarPermiso =  $this->model->verificarPermiso($id_user, 'Usuario');
+            $id_Rol = $_SESSION['Rol'];
+            $verificarPermiso =  $this->model->verificarPermiso($id_Rol, 'Usuario');
             if (!empty($verificarPermiso) || $id_user == 1) {
-                $data = $this->model->GetCajas();
+                $data = $this->model->GetRol();
                 $this->views->cargarView($this, 'index', $data);
             } else {
                 header('Location:'.base_url.'Errores/Permiso');
@@ -55,8 +56,8 @@
                 $hasCalve = hash('SHA256',  $clave);
                 $data = $this->model->ValidarUsuario($usuario, $hasCalve);
                 if($data){
-                    $Menu = $this->model->GetMenu($data['id']);
-                    $SubMenu = $this->model->GetSubMenu($data['id']);
+                    $Menu = $this->model->GetMenu($data['Rol']);
+                    $SubMenu = $this->model->GetSubMenu($data['Rol']);
                     $_SESSION['id'] = $data['id'];
                     $_SESSION['Numdoc'] = $data['Numdoc'];
                     $_SESSION['Correo'] = $data['Correo'];
@@ -98,7 +99,6 @@
                         $data[$i]['Estado'] = '<span class="badge text-bg-success">Activo</span>';
                         $data[$i]['Opciones'] = '
                             <div>                
-                                <a href="'.base_url.'Usuario/Permiso/'.$data[$i]['id'].'" class="btn btn-dark"><i class="bi bi-key"></i></a>
                                 <button type="button" class="btn btn-primary" onclick="btnEdiUsu('.$data[$i]['id'].')"><i class="bi bi-pencil-square"></i></button>
                                 <button type="button" class="btn btn-danger" onclick= "DesactivarUsuario('.$data[$i]['id'].')"><i class="bi bi-trash"></i></button>
                             </div>
@@ -132,12 +132,12 @@
             $hasGenClave = hash('SHA256', $GeClave );
             $GeConClave = $_POST['GeConClave'];
             $GeSexo = $_POST['GeSexo'];
-            $GeCaja = $_POST['GeCaja'];
+            $GeRol = $_POST['GeRol'];
             $GeEstado = $_POST['GeEstado'];
             if (
                 empty($GePriNom) || empty($GePriApe) || empty($GeSegApe) ||
                 empty($GeTipDoc) || empty($GeNumDoc) || empty($GeTelefono) || empty($GeCorreo) ||
-                empty($GeUsuario) || empty($GeSexo) ||  empty($GeCaja) || empty($GeEstado)
+                empty($GeUsuario) || empty($GeSexo) ||  empty($GeRol) || empty($GeEstado)
             ) {
                 $msg = array(
                     "status"=> "Error",
@@ -146,7 +146,7 @@
             }else{
                 // Actualizar usuario
                 if( !empty($GeUsuId) ){
-                    $data = $this->model->ActulizarUsuarios($GePriNom , $GeSegNom, $GePriApe, $GeSegApe, $GeTipDoc, $GeNumDoc, $GeTelefono, $GeUsuario, $GeSexo, $GeCaja, $GeCorreo, $GeEstado, $GeUsuId);
+                    $data = $this->model->ActulizarUsuarios($GePriNom , $GeSegNom, $GePriApe, $GeSegApe, $GeTipDoc, $GeNumDoc, $GeTelefono, $GeUsuario, $GeSexo, $GeRol, $GeCorreo, $GeEstado, $GeUsuId);
                     if ($data == 'Actualizado') {
                         $msg = array(
                             "status"=> "Actualizado",
@@ -167,7 +167,7 @@
                         "status"=> "ErrorClave",
                         "mensaje" => "Las contraseñas no coinciden");
                     }else {
-                        $data = $this->model->RegistrarUsuarios($GePriNom , $GeSegNom, $GePriApe, $GeSegApe, $GeTipDoc, $GeNumDoc, $GeTelefono, $GeUsuario, $hasGenClave, $GeSexo, $GeCaja, $GeCorreo, $GeEstado);
+                        $data = $this->model->RegistrarUsuarios($GePriNom , $GeSegNom, $GePriApe, $GeSegApe, $GeTipDoc, $GeNumDoc, $GeTelefono, $GeUsuario, $hasGenClave, $GeSexo, $GeRol, $GeCorreo, $GeEstado);
                         if ($data == 'Ok') {
                             $msg = array(
                                 "status"=> "Ok",

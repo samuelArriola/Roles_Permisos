@@ -90,7 +90,7 @@ class Producto extends Controller {
                 }
             }
         }
-        echo json_encode($data, JSON_UNESCAPED_UNICODE);
+        echo json_encode($msg, JSON_UNESCAPED_UNICODE);
         die();
     }
 
